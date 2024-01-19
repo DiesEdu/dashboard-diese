@@ -25,6 +25,9 @@ import { MdNotificationsNone, MdInfoOutline } from 'react-icons/md';
 import { FaEthereum } from 'react-icons/fa';
 import routes from 'routes.js';
 import { ThemeEditor } from './ThemeEditor';
+// Firebase
+import { getAuth, signOut } from "firebase/auth";
+
 export default function HeaderLinks(props) {
 	const { secondary } = props;
 	// Chakra Color Mode
@@ -41,6 +44,18 @@ export default function HeaderLinks(props) {
 		'14px 17px 40px 4px rgba(112, 144, 176, 0.06)'
 	);
 	const borderButton = useColorModeValue('secondaryGray.500', 'whiteAlpha.200');
+
+	//Firebase Sign Out
+	const auth = getAuth();
+	const handleSignOut = async () => {
+		console.log("handle sign out clicked!");
+		signOut(auth).then(() => {
+			console.log("successful sign out!");
+		}).catch((error) => {
+			// An error happened.
+			console.log("error sign out?");
+		});
+	}
 	return (
 		<Flex
 			w={{ sm: '100%', md: 'auto' }}
@@ -206,7 +221,7 @@ export default function HeaderLinks(props) {
 							color="red.400"
 							borderRadius="8px"
 							px="14px">
-							<Text fontSize="sm">Log out</Text>
+							<Text fontSize="sm" onClick={handleSignOut}>Log out</Text>
 						</MenuItem>
 					</Flex>
 				</MenuList>

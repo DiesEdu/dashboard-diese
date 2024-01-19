@@ -22,7 +22,7 @@
 */
 
 import React from "react";
-import { NavLink } from "react-router-dom";
+import {NavLink, Redirect, useHistory} from "react-router-dom";
 // Chakra imports
 import {
   Box,
@@ -75,6 +75,9 @@ function SignIn() {
   const [err, setErr] = React.useState(false);
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+
+  const history = useHistory();
+
   const handleSignIn = async () => {
     console.log("email: " + email);
     console.log("password: " + password);
@@ -84,6 +87,9 @@ function SignIn() {
             // Signed in
             const user = userCredential.user;
             console.log("user: " + user.uid);
+
+            // Redirect the user programmatically
+            history.push('/');
           })
           .catch((error) => {
             const errorCode = error.code;
