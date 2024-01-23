@@ -26,7 +26,9 @@ import { FaEthereum } from 'react-icons/fa';
 import routes from 'routes.js';
 import { ThemeEditor } from './ThemeEditor';
 // Firebase
-import { getAuth, signOut } from "firebase/auth";
+import {getAuth, onAuthStateChanged, signOut} from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import {auth, db} from "../../firebase";
 
 export default function HeaderLinks(props) {
 	const { secondary } = props;
@@ -56,6 +58,63 @@ export default function HeaderLinks(props) {
 			console.log("error sign out?");
 		});
 	}
+
+	//Firebase login data details
+	const [currentUser, setCurrentUser] = React.useState({});
+	const [nickname, setNickname] = React.useState("");
+	const [fullName, setFullName] = React.useState("");
+	React.useEffect(() => {
+		onAuthStateChanged(auth, (user) => {
+			if (user) {
+				setCurrentUser(user);
+			} else {
+				// User is signed out
+			}
+		});
+
+		const fetchData = async () => {
+			try {
+				const docRef = doc(db, "user", "userProfiles");
+				const docSnap = await getDoc(docRef);
+
+				if (docSnap.exists()) {
+					const data = docSnap.data();
+					// console.log("Document data:", data);
+					const userProfile = data.userDetails;
+
+					const getUserByUUID = (uuid) => {
+						// console.log("---uuid: " + uuid);
+						for (const key in userProfile) {
+							if (userProfile[key].uuid === uuid) {
+								setNickname(userProfile[key].nickName);
+								setFullName(userProfile[key].fullName);
+								return [userProfile[key]];
+							}
+						}
+						return [];
+					};
+
+					const targetUUID = currentUser.uid;
+					// console.log("targetUUID: " + targetUUID);
+					const usersWithUUID = getUserByUUID(targetUUID);
+
+					if (usersWithUUID.length > 0) {
+						// console.log("Users found:", usersWithUUID);
+					} else {
+						// console.log("No users with UUID", targetUUID, "found");
+					}
+				} else {
+					// docSnap.data() will be undefined in this case
+					console.log("No such document!");
+				}
+
+			} catch (error) {
+				console.error('Error fetching data: ', error);
+			}
+		};
+		fetchData();
+	}, [currentUser]);
+
 	return (
 		<Flex
 			w={{ sm: '100%', md: 'auto' }}
@@ -186,7 +245,7 @@ export default function HeaderLinks(props) {
 					<Avatar
 						_hover={{ cursor: 'pointer' }}
 						color="white"
-						name="Adela Parkson"
+						name={fullName}
 						bg="#11047A"
 						size="sm"
 						w="40px"
@@ -205,7 +264,7 @@ export default function HeaderLinks(props) {
 							fontSize="sm"
 							fontWeight="700"
 							color={textColor}>
-							👋&nbsp; Hey, Adela
+							👋&nbsp; Hey, &nbsp;{nickname}
 						</Text>
 					</Flex>
 					<Flex flexDirection="column" p="10px">

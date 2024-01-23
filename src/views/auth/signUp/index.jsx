@@ -50,7 +50,7 @@ import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
 // Firebase
 import { auth } from "../../../firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {createUserWithEmailAndPassword, onAuthStateChanged} from "firebase/auth";
 import { db } from "../../../firebase";
 import {
   doc,
@@ -91,7 +91,6 @@ function SignUp() {
 
   // Process Sign Up
   const [err, setErr] = React.useState(false);
-  const [uid, setUid] = React.useState("");
 
   const [fullName, setFullName] = React.useState("");
   const [nickName, setNickName] = React.useState("");
@@ -118,20 +117,12 @@ function SignUp() {
     console.log("password: " + password);
     try {
       // create email password auth
-      await createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          // Signed up
-          const user = userCredential.user;
-          setUid(user.uid);
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-        });
+      const userValue = await createUserWithEmailAndPassword(auth, email, password);
+
       // create firestore
       const docData = {
         userDetails: arrayUnion({
-          uuid: uid,
+          uuid: userValue.user.uid,
           fullName: fullName,
           nickName: nickName,
           birth: Timestamp.fromDate(new Date(formattedBirth)),
@@ -153,7 +144,7 @@ function SignUp() {
         // stringExample: "Hello world!",
         // uuid: uid,
       };
-      await updateDoc(doc(db, "user", "userProfile"), docData);
+      await updateDoc(doc(db, "user", "userProfiles"), docData);
       history.push("/");
     } catch (err) {
       setErr(true);
