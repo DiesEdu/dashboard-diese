@@ -57,6 +57,7 @@ import {
 } from "views/admin/default/variables/columnsData";
 import tableDataCheck from "views/admin/default/variables/tableDataCheck.json";
 import tableDataComplex from "views/admin/default/variables/tableDataComplex.json";
+import FixedPlugin from "../../../components/fixedPlugin/FixedPlugin";
 
 export default function UserReports() {
   // Chakra Color Mode
@@ -167,6 +168,7 @@ export default function UserReports() {
           <MiniCalendar h='100%' minW='100%' selectRange={false} />
         </SimpleGrid>
       </SimpleGrid>
+        <FixedPlugin />
     </Box>
   );
 }

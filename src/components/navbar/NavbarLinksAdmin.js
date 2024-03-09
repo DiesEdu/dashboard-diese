@@ -23,12 +23,11 @@ import React from 'react';
 import navImage from 'assets/img/layout/Navbar.png';
 import { MdNotificationsNone, MdInfoOutline } from 'react-icons/md';
 import { FaEthereum } from 'react-icons/fa';
-import routes from 'routes.js';
+import mainRoutes from 'main-routes';
 import { ThemeEditor } from './ThemeEditor';
 // Firebase
-import {getAuth, onAuthStateChanged, signOut} from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import {auth, db} from "../../firebase";
+import {getAuth, signOut} from "firebase/auth";
+import { UserData } from "views/auth/user-data";
 
 export default function HeaderLinks(props) {
 	const { secondary } = props;
@@ -60,60 +59,10 @@ export default function HeaderLinks(props) {
 	}
 
 	//Firebase login data details
-	const [currentUser, setCurrentUser] = React.useState({});
-	const [nickname, setNickname] = React.useState("");
-	const [fullName, setFullName] = React.useState("");
-	React.useEffect(() => {
-		onAuthStateChanged(auth, (user) => {
-			if (user) {
-				setCurrentUser(user);
-			} else {
-				// User is signed out
-			}
-		});
-
-		const fetchData = async () => {
-			try {
-				const docRef = doc(db, "user", "userProfiles");
-				const docSnap = await getDoc(docRef);
-
-				if (docSnap.exists()) {
-					const data = docSnap.data();
-					// console.log("Document data:", data);
-					const userProfile = data.userDetails;
-
-					const getUserByUUID = (uuid) => {
-						// console.log("---uuid: " + uuid);
-						for (const key in userProfile) {
-							if (userProfile[key].uuid === uuid) {
-								setNickname(userProfile[key].nickName);
-								setFullName(userProfile[key].fullName);
-								return [userProfile[key]];
-							}
-						}
-						return [];
-					};
-
-					const targetUUID = currentUser.uid;
-					// console.log("targetUUID: " + targetUUID);
-					const usersWithUUID = getUserByUUID(targetUUID);
-
-					if (usersWithUUID.length > 0) {
-						// console.log("Users found:", usersWithUUID);
-					} else {
-						// console.log("No users with UUID", targetUUID, "found");
-					}
-				} else {
-					// docSnap.data() will be undefined in this case
-					console.log("No such document!");
-				}
-
-			} catch (error) {
-				console.error('Error fetching data: ', error);
-			}
-		};
-		fetchData();
-	}, [currentUser]);
+	const currentUser = UserData();
+	const nickname = currentUser.nickName;
+	const fullName = currentUser.fullName;
+	// console.log("~~~~~currentUser: " + currentUser);
 
 	return (
 		<Flex
@@ -145,7 +94,7 @@ export default function HeaderLinks(props) {
 					</Text>
 				</Text>
 			</Flex>
-			<SidebarResponsive routes={routes} />
+			<SidebarResponsive routes={mainRoutes} />
 			<Menu>
 				<MenuButton p="0px">
 					<Icon mt="6px" as={MdNotificationsNone} color={navbarIcon} w="18px" h="18px" me="10px" />

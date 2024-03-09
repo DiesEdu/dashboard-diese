@@ -1,20 +1,22 @@
 import React from "react";
 
 // Chakra imports
-import { Flex, useColorModeValue } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 
 // Custom components
-import { HorizonLogo } from "components/icons/Icons";
+// import { HorizonLogo } from "components/icons/Icons";
+import logoDiese from "components/icons/diese_logo.png";
 import { HSeparator } from "components/separator/Separator";
 
 export function SidebarBrand() {
   //   Chakra color mode
-  let logoColor = useColorModeValue("navy.700", "white");
+  // let logoColor = useColorModeValue("navy.700", "white");
 
   return (
-    <Flex align='center' direction='column'>
-      <HorizonLogo h='26px' w='175px' my='32px' color={logoColor} />
-      <HSeparator mb='20px' />
+    <Flex align="center" direction="column">
+      {/*<HorizonLogo h='26px' w='175px' my='32px' color={logoColor}/>*/}
+      <img src={logoDiese} alt="Diese Logo" />
+      <HSeparator mb="20px" />
     </Flex>
   );
 }

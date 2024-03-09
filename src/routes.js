@@ -12,6 +12,8 @@ import {
 // Admin Imports
 import MainDashboard from "views/admin/default";
 import NFTMarketplace from "views/admin/marketplace";
+import UserManagement from "views/admin/userManagement";
+import EditView from "views/admin/userManagement/edit-view";
 import Profile from "views/admin/profile";
 import DataTables from "views/admin/dataTables";
 import RTL from "views/admin/rtl";
@@ -49,6 +51,20 @@ const routes = [
     icon: <Icon as={MdBarChart} width='20px' height='20px' color='inherit' />,
     path: "/data-tables",
     component: DataTables,
+  },
+  {
+    name: "User Management",
+    layout: "/admin",
+    path: "/user-management",
+    icon: <Icon as={MdPerson} width='20px' height='20px' color='inherit' />,
+    component: UserManagement,
+  },
+  {
+    name: "View User",
+    layout: "/admin",
+    path: "/view-user",
+    icon: <Icon as={MdPerson} width='20px' height='20px' color='inherit' />,
+    component: EditView,
   },
   {
     name: "Profile",

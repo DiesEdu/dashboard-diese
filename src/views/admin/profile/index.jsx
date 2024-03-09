@@ -36,7 +36,11 @@ import banner from "assets/img/auth/banner.png";
 import avatar from "assets/img/avatars/avatar4.png";
 import React from "react";
 
+// User Profile Details
+import { UserData } from "views/auth/user-data";
+
 export default function Overview() {
+    const userDetail = UserData();
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
       {/* Main Fields */}
@@ -52,9 +56,9 @@ export default function Overview() {
         gap={{ base: "20px", xl: "20px" }}>
         <Banner
           gridArea='1 / 1 / 2 / 2'
-          banner={banner}
-          avatar={avatar}
-          name='Adela Parkson'
+          // banner={banner} add your banner here
+          // avatar={avatar} add your avatar here
+          name={userDetail.fullName}
           job='Product Designer'
           posts='17'
           followers='9.7k'
